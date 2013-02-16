@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ namespace KeePass.Util.XmlSerialization
 			object oResult = null;
 			if((m_t == typeof(AppConfigEx)) || (m_t == typeof(KPTranslation)))
 			{
-				XmlReaderSettings xrs = Kdb4File.CreateStdXmlReaderSettings();
+				XmlReaderSettings xrs = KdbxFile.CreateStdXmlReaderSettings();
 				XmlReader xr = XmlReader.Create(s, xrs);
 
 				string strRootName = GetXmlName(m_t);

@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -105,11 +105,7 @@ namespace KeePass.Plugins
 			}
 			catch(Exception exLoad)
 			{
-				if(Program.CommandLineArgs[AppDefs.CommandLineOptions.Debug] != null)
-					MessageService.ShowWarningExcp(strFilePath, exLoad);
-				else
-					MessageService.ShowWarning(KPRes.PluginIncompatible +
-						MessageService.NewLine + strFilePath, KPRes.PluginUpdateHint);
+				PluginManager.ShowLoadError(strFilePath, exLoad, slStatus);
 			}
 		}
 
@@ -270,7 +266,7 @@ namespace KeePass.Plugins
 
 		private static string CreateTempDirectory()
 		{
-			string strTmpRoot = Path.GetTempPath();
+			string strTmpRoot = UrlUtil.GetTempPath();
 			strTmpRoot = UrlUtil.EnsureTerminatingSeparator(strTmpRoot, false);
 			strTmpRoot += (new PwUuid(true)).ToHexString();
 
@@ -523,23 +519,39 @@ namespace KeePass.Plugins
 			PrepareSourceFiles(plgx);
 
 			string[] vCompilers;
-			if(Environment.Version.Major >= 4)
+			Version vClr = Environment.Version;
+			int iClrMajor = vClr.Major, iClrMinor = vClr.Minor;
+			if((iClrMajor >= 5) || ((iClrMajor == 4) && (iClrMinor >= 5)))
 			{
 				vCompilers = new string[] {
 					null,
+					"v4.5",
 					"v4", // Suggested in CodeDomProvider.CreateProvider doc
 					"v4.0", // Suggested in community content of the above
 					"v4.0.30319", // Deduced from file system
 					"v3.5"
 				};
 			}
+			else if(iClrMajor == 4) // 4.0
+			{
+				vCompilers = new string[] {
+					null,
+					"v4", // Suggested in CodeDomProvider.CreateProvider doc
+					"v4.0", // Suggested in community content of the above
+					"v4.0.30319", // Deduced from file system
+					"v4.5",
+					"v3.5"
+				};
+			}
 			else // <= 3.5
 			{
 				vCompilers = new string[] {
-					null, "v3.5",
+					null,
+					"v3.5",
 					"v4", // Suggested in CodeDomProvider.CreateProvider doc
 					"v4.0", // Suggested in community content of the above
-					"v4.0.30319" // Deduced from file system
+					"v4.0.30319", // Deduced from file system
+					"v4.5"
 				};
 			}
 

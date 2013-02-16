@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ namespace KeePass.DataExchange
 			Debug.Assert(m_vFormats == null);
 			m_vFormats = new List<FileFormatProvider>();
 
-			// m_vFormats.Add(new KeePassCsv1x());
+			m_vFormats.Add(new KeePassCsv1x());
 			m_vFormats.Add(new KeePassKdb1x());
 			m_vFormats.Add(new KeePassKdb2x());
 			m_vFormats.Add(new KeePassKdb2xRepair());
@@ -112,11 +112,13 @@ namespace KeePass.DataExchange
 			m_vFormats.Add(new AnyPwCsv144());
 			m_vFormats.Add(new CodeWalletTxt605());
 			m_vFormats.Add(new DataVaultCsv47());
+			m_vFormats.Add(new DesktopKnox32());
 			m_vFormats.Add(new FlexWalletXml17());
 			m_vFormats.Add(new HandySafeTxt512());
 			m_vFormats.Add(new HandySafeProXml12());
 			m_vFormats.Add(new KasperskyPwMgrXml50());
 			m_vFormats.Add(new KeePassXXml041());
+			m_vFormats.Add(new LastPassCsv2());
 			m_vFormats.Add(new PassKeeper12());
 			m_vFormats.Add(new PpKeeperHtml270());
 			m_vFormats.Add(new PwAgentXml234());

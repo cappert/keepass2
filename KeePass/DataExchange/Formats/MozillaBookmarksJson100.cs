@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ namespace KeePass.DataExchange.Formats
 		{
 			if(jObject.Items.ContainsKey(m_strGroup))
 			{
-				JsonArray jArray = jObject.Items[m_strGroup].Value as JsonArray;
+				JsonArray jArray = (jObject.Items[m_strGroup].Value as JsonArray);
 				if(jArray == null) { Debug.Assert(false); return; }
 
 				PwGroup pgNew;
@@ -88,7 +88,7 @@ namespace KeePass.DataExchange.Formats
 
 				foreach(JsonValue jValue in jArray.Values)
 				{
-					JsonObject objSub = jValue.Value as JsonObject;
+					JsonObject objSub = (jValue.Value as JsonObject);
 					if(objSub != null) AddObject(pgNew, objSub, pwContext, true);
 					else { Debug.Assert(false); }
 				}

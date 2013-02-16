@@ -127,6 +127,9 @@
 		<Data Name="AutoType">
 			<Value>Auto-Type</Value>
 		</Data>
+		<Data Name="AutoTypeCancelOnTitleChange">
+			<Value>Cancel auto-type when the target window title changes</Value>
+		</Data>
 		<Data Name="AutoTypeCancelOnWindowChange">
 			<Value>Cancel auto-type when the target window changes</Value>
 		</Data>
@@ -790,6 +793,9 @@
 		<Data Name="ForceSystemFontUnix">
 			<Value>Force using system font (Unix only)</Value>
 		</Data>
+		<Data Name="Format">
+			<Value>Format</Value>
+		</Data>
 		<Data Name="FormatNoDatabaseDesc">
 			<Value>This file format doesn't support database descriptions.</Value>
 		</Data>
@@ -864,6 +870,9 @@
 		</Data>
 		<Data Name="HexKey">
 			<Value>{PARAM}-Bit Hex Key</Value>
+		</Data>
+		<Data Name="HexViewer">
+			<Value>Hex Viewer</Value>
 		</Data>
 		<Data Name="HideUsingAsterisks">
 			<Value>Hide field using asterisks</Value>
@@ -940,6 +949,9 @@
 		<Data Name="Installed">
 			<Value>Installed</Value>
 		</Data>
+		<Data Name="InterleavedKeySending">
+			<Value>Allow interleaved sending of keys</Value>
+		</Data>
 		<Data Name="Internet">
 			<Value>Internet</Value>
 		</Data>
@@ -958,7 +970,7 @@
 		<Data Name="Italic">
 			<Value>Italic</Value>
 		</Data>
-		<Data Name="Kdb3KeePassLibC">
+		<Data Name="KdbKeePassLibC">
 			<Value>The KeePassLibC library is required to open and save KDB files created by KeePass 1.x.</Value>
 		</Data>
 		<Data Name="KdbxFiles">
@@ -1312,6 +1324,9 @@
 		<Data Name="PluginOperatingSystemUnsupported">
 			<Value>The current operating system is unsupported by the plugin.</Value>
 		</Data>
+		<Data Name="PluginProvided">
+			<Value>Provided by Plugins</Value>
+		</Data>
 		<Data Name="Plugins">
 			<Value>Plugins</Value>
 		</Data>
@@ -1423,6 +1438,9 @@
 		<Data Name="RememberKeySources">
 			<Value>Remember key sources (key file paths, provider names, ...)</Value>
 		</Data>
+		<Data Name="RememberWorkingDirectories">
+			<Value>Remember working directories</Value>
+		</Data>
 		<Data Name="RemoteHostReachable">
 			<Value>Remote host is reachable (ping)</Value>
 		</Data>
@@ -1513,8 +1531,14 @@
 		<Data Name="SecDeskFileDialogHint">
 			<Value>Note: KeePass shows this simple file browser dialog, because standard Windows file dialogs cannot be shown on the secure desktop for security reasons.</Value>
 		</Data>
+		<Data Name="SecDeskOtherSwitched">
+			<Value>An application has switched from the secure desktop to a different desktop.</Value>
+		</Data>
 		<Data Name="SecDeskPlaySound">
 			<Value>Play UAC sound when switching to secure desktop</Value>
+		</Data>
+		<Data Name="SecDeskSwitchBack">
+			<Value>Click [OK] to switch back to the secure desktop.</Value>
 		</Data>
 		<Data Name="SelectAll">
 			<Value>Select All</Value>
@@ -1546,11 +1570,17 @@
 		<Data Name="SelfTestFailed">
 			<Value>One or more of the KeePass self-tests failed.</Value>
 		</Data>
+		<Data Name="Separator">
+			<Value>Separator</Value>
+		</Data>
 		<Data Name="Sequence">
 			<Value>Sequence</Value>
 		</Data>
 		<Data Name="ShowDerefData">
 			<Value>Show dereferenced data</Value>
+		</Data>
+		<Data Name="ShowDerefDataAndRefs">
+			<Value>When showing dereferenced data, additionally show references</Value>
 		</Data>
 		<Data Name="ShowDerefDataAsync">
 			<Value>Show dereferenced data asynchronously</Value>
@@ -1891,8 +1921,8 @@
 		<Data Name="XslSelectFile">
 			<Value>Select XSL Transformation File</Value>
 		</Data>
-		<Data Name="XslStylesheets">
-			<Value>XSL Stylesheets for KDB4 XML</Value>
+		<Data Name="XslStylesheetsKdbx">
+			<Value>XSL Stylesheets for KDBX XML</Value>
 		</Data>
 		<Data Name="Yes">
 			<Value>Yes</Value>
@@ -1934,7 +1964,7 @@
 			<Value>A newer KeePass version is required to open this file.</Value>
 		</Data>
 		<Data Name="FileSaveCorruptionWarning">
-			<Value>The target file might be in a corrupted state. Please try saving again, and if that fails, save the database to a different location.</Value>
+			<Value>The target file might be corrupted. Please try saving again. If that fails, save the database to a different location.</Value>
 		</Data>
 		<Data Name="FileSaveFailed">
 			<Value>Failed to save the current database to the specified location!</Value>
@@ -1968,6 +1998,9 @@
 		</Data>
 		<Data Name="KeePass1xHint">
 			<Value>In order to import KeePass 1.x KDB files, create a new 2.x database file and click 'File' -&gt; 'Import' in the main menu. In the import dialog, choose 'KeePass KDB (1.x)' as file format.</Value>
+		</Data>
+		<Data Name="KeyFileDbSel">
+			<Value>Database files cannot be used as key files.</Value>
 		</Data>
 		<Data Name="MasterSeedLengthInvalid">
 			<Value>The length of the master key seed is invalid!</Value>

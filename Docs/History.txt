@@ -1,3 +1,183 @@
+2013-02-03: 2.21
+- Generic CSV importer: a group separator can be specified now
+  (for importing group trees)
+- Internal data viewer: added hex viewer mode (which is now the
+  default for unknown data types)
+- In the 'Show Entries by Tag' menu, the number of entries
+  having a specific tag is now shown right of the tag
+- In the 'Add Tag' menu, a tag is now disabled if all selected
+  entries already have this tag
+- Auto-Type: added support for right modifier keys
+- Added special key codes: {WIN}, {LWIN}, {RWIN}, {APPS},
+  {NUMPAD0} to {NUMPAD9}
+- Interleaved sending of keys is now prevented by default (if
+  you e.g. have an auto-type sequence that triggers another
+  auto-type, enable the new option 'Allow interleaved sending
+  of keys' in 'Tools' -> 'Options' -> tab 'Advanced')
+- Added '-auto-type-selected' command line option (other
+  running KeePass instances perform auto-type for the currently
+  selected entry)
+- Added option to additionally show references when showing
+  dereferenced data (enabled by default)
+- The selection in a secure edit control is now preserved when
+  unhiding and hiding the content
+- The auto-type association editing dialog now does not hang
+  anymore when a window of any other application hangs
+- When an application switches from the secure desktop to a
+  different desktop, KeePass now shows a warning message box;
+  clicking [OK] switches back to the secure desktop
+- Added 'OK'/'Cancel' buttons in the icon picker dialog
+- Added support for importing LastPass 2.0.2 CSV files
+- KeePass now shows an error message when the user accidentally
+  attempts to use a database file as key file
+- Added support for UTF-16 surrogate pairs
+- Added UTF-8 BOM support for version information files
+- The KeePass version is now also shown in the components list
+  in the 'About' dialog
+- File operations are now context-independent (this e.g. makes
+  it possible to use the 'Activate database' trigger action
+  during locking)
+- Plugins can now register their placeholders to be shown in
+  the auto-type item editing dialog
+- Plugins can now subscribe to IO access events
+- Added workaround for .NET bug 694242; status dialogs now
+  scale properly with the DPI resolution
+- Added workaround for Mono DataGridView.EditMode bug
+- Added workaround for Mono bug 586901; high Unicode characters
+  in rich text boxes are displayed properly now
+
+- When the main window UI is being unblocked, the focus is not
+  reset anymore, if a primary control has the focus
+- When opening the icon picker dialog, KeePass now ensures that
+  the currently selected icon is visible
+- Internal data viewer: improved visibility updating
+- The e-mail box icon by default is not inherited by new
+  entries anymore
+- The database is now marked as modified when auto-typing a TAN
+  entry
+- Enhanced AnyPassword importer to additionally support CSV
+  files exported by AnyPassword Pro 1.07
+- Enhanced Password Safe XML importer (KeePass tries to fix the
+  broken XML files exported by Password Safe 3.29
+  automatically)
+- IO credentials can be loaded over IPC now
+- Enhanced user switch detection
+- Even when an exception occurs, temporary files created during
+  KDB exports are now deleted immediately
+- Improved behavior on Unix-like systems when the operating
+  system does not grant KeePass access to the temporary
+  directory
+- Improved critical sections that are not supposed to be re-
+  entered by the same thread
+- Improved secure desktop name generation
+- When a dialog is closed, references within the global client
+  image list to controls (event handlers) are removed now
+- .NET 4.5 is now preferred, if installed
+- PLGX plugins are now preferably compiled using the .NET 4.5
+  compiler, if KeePass is currently running under the 4.5 CLR
+- Updated KB links
+- Changed naming of translation files
+- The installer now always overwrites the KeePassLibC 1.x
+  support libraries
+- Upgraded installer
+- Various code optimizations
+- Minor other improvements
+
+- When locking multiple databases and cancelling a 'Save
+  Changes?' dialog, the UI is now updated correctly
+- '&' characters in dynamic menu texts, in dialog banner texts,
+  in image combobox texts, in text box prompts and in tooltips
+  are now displayed properly
+
+2012-10-04: 2.20.1
+- Improved support for images with DPI resolutions different
+  from the DPI resolution of the display device
+- {GOOGLECHROME} placeholder: updated detection code to also
+  support the latest versions of Chrome
+- The option to lock on remote control mode changes now
+  additionally watches for remote connects and disconnects
+- Improved Windows registry accesses
+- Improved behavior when the user deletes the system temporary
+  directory
+- On Unix-like systems, KeePass now stores most of its
+  temporary files in a private temporary directory (preferably
+  in $XDG_RUNTIME_DIR)
+- Added detection support for the following web browsers on
+  Unix-like systems: Rekonq, Midori and Dooble
+- KeePass does not try to set the WM_CLASS property on Mac OS X
+  systems anymore
+- Modified some icons to work around unsupported PNG
+  transparency keys in Mono
+- Various code optimizations
+- Minor other improvements
+
+2012-09-08: 2.20
+- Header data in KDBX files is now authenticated (to prevent
+  silent data corruption attacks; thanks to P. Gasti and K. B.
+  Rasmussen)
+- Added management of working directories (a separate working
+  directory is remembered for each file dialog context; working
+  directories are remembered relatively to KeePass.exe; the
+  management can be deactivated by turning off the new option
+  'Remember working directories')
+- Added option to cancel auto-type when the target window title
+  changes
+- Added quick search box in the toolbar of the internal text
+  editor
+- Files can now be attached to entries by using drag&drop from
+  Windows Explorer to the attachments list in the entry editing
+  dialog
+- Added '-pw-stdin' command line option to make KeePass read
+  the master password from the StdIn stream
+- Added placeholders to get parts of the entry URL: {URL:SCM},
+  {URL:HOST}, {URL:PORT}, {URL:PATH} and {URL:QUERY}
+- Added a 'Details' button in the plugin load failure message
+  box (when clicked, detailed error information for developers
+  is shown)
+- Added warning icon left of the Windows user account option
+  description in the master key creation dialog
+- Added support for more image file formats (e.g. when
+  importing custom client icons)
+- Added support for importing DesktopKnox 3.2 XML files
+- The generic CSV importer now guesses whether the option to
+  ignore the first row should be enabled or not (the user of
+  course can still specify it manually, too)
+- Added support for exporting to KeePass 1.x CSV files
+- Added support for moving the PLGX cache to a different remote
+  drive
+- The Spr engine is now extensible, i.e. plugins can provide
+  additional transformations/placeholders
+- On Unix-like systems, KeePass now uses the 'xsel' utility for
+  clipboard operations, if 'xsel' is installed (in order to
+  work around Mono clipboard bugs)
+- Added Mono workaround to set the WM_CLASS property
+- Added workaround for Mono splitter bug
+- The 'PrepMonoDev.sh' script now removes the serialization
+  assembly generating post build event
+- TrlUtil: added support for importing PO files
+
+- Improved FTP file existence checking
+- High DPI UI improvements
+- The database is not marked as modified anymore when using in-
+  place label editing to fake-edit a group's name (i.e. when
+  the final new name is the same as the previous one)
+- Password is not auto-repeated anymore when trying to unhide
+  it fails due to the policy 'Unhide Passwords' being disabled
+- Improved menu accelerator and shortcut keys
+- Changed IO connection name display format
+- Improved browser detection on Mac OS X
+- Task dialog thread safety improvements
+- Added UI check during import for KPScript
+- Upgraded and improved installer (now uses Unicode, LZMA2
+  compression, ...)
+- Various UI improvements
+- Various code optimizations
+- Minor other improvements
+
+- On Windows systems, new line sequences in text to be shown in
+  a standard multiline text box are now converted to Windows
+  format
+
 2012-05-01: 2.19
 - New generic CSV importer (now supports multi-line fields, '\'
   as escape character, field & record separators and the text

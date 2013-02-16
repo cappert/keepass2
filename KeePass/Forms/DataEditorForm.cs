@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -131,6 +131,10 @@ namespace KeePass.Forms
 			UIUtil.ConfigureTbButton(m_tbAlignCenter, KPRes.AlignCenter, null);
 			UIUtil.ConfigureTbButton(m_tbAlignLeft, KPRes.AlignLeft, null);
 			UIUtil.ConfigureTbButton(m_tbAlignRight, KPRes.AlignRight, null);
+
+			string strSearchTr = ((WinUtil.IsAtLeastWindowsVista ?
+				string.Empty : " ") + KPRes.Search);
+			UIUtil.SetCueBanner(m_tbFind, strSearchTr);
 
 			UIUtil.EnableAutoCompletion(m_tbFontCombo, true);
 			UIUtil.EnableAutoCompletion(m_tbFontSizeCombo, true);
@@ -560,6 +564,39 @@ namespace KeePass.Forms
 			}
 
 			return pbData;
+		}
+
+		private void OnTextFindKeyDown(object sender, KeyEventArgs e)
+		{
+			if((e.KeyCode == Keys.Enter) || (e.KeyCode == Keys.Return))
+			{
+				e.SuppressKeyPress = true;
+				e.Handled = true;
+
+				OnTextFind();
+			}
+		}
+
+		private void OnTextFindKeyUp(object sender, KeyEventArgs e)
+		{
+			if((e.KeyCode == Keys.Enter) || (e.KeyCode == Keys.Return))
+			{
+				e.SuppressKeyPress = true;
+				e.Handled = true;
+			}
+		}
+
+		private void OnTextFind()
+		{
+			string strNeedle = m_tbFind.Text;
+			if(string.IsNullOrEmpty(strNeedle)) return;
+
+			int iStart = m_rtbText.SelectionStart + m_rtbText.SelectionLength;
+			if(iStart < 0) { Debug.Assert(false); iStart = 0; }
+			if(iStart >= m_rtbText.TextLength) iStart = 0;
+
+			int p = m_rtbText.Find(strNeedle, iStart, -1, RichTextBoxFinds.None);
+			if(p < 0) m_rtbText.Find(strNeedle, 0, -1, RichTextBoxFinds.None);
 		}
 	}
 }

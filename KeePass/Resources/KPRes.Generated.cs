@@ -68,6 +68,7 @@ namespace KeePass.Resources
 			m_strAutoShowExpiredEntries = TryGetEx(dictNew, "AutoShowExpiredEntries", m_strAutoShowExpiredEntries);
 			m_strAutoShowSoonToExpireEntries = TryGetEx(dictNew, "AutoShowSoonToExpireEntries", m_strAutoShowSoonToExpireEntries);
 			m_strAutoType = TryGetEx(dictNew, "AutoType", m_strAutoType);
+			m_strAutoTypeCancelOnTitleChange = TryGetEx(dictNew, "AutoTypeCancelOnTitleChange", m_strAutoTypeCancelOnTitleChange);
 			m_strAutoTypeCancelOnWindowChange = TryGetEx(dictNew, "AutoTypeCancelOnWindowChange", m_strAutoTypeCancelOnWindowChange);
 			m_strAutoTypeEntrySelection = TryGetEx(dictNew, "AutoTypeEntrySelection", m_strAutoTypeEntrySelection);
 			m_strAutoTypeEntrySelectionDescLong = TryGetEx(dictNew, "AutoTypeEntrySelectionDescLong", m_strAutoTypeEntrySelectionDescLong);
@@ -289,6 +290,7 @@ namespace KeePass.Resources
 			m_strFolder = TryGetEx(dictNew, "Folder", m_strFolder);
 			m_strFont = TryGetEx(dictNew, "Font", m_strFont);
 			m_strForceSystemFontUnix = TryGetEx(dictNew, "ForceSystemFontUnix", m_strForceSystemFontUnix);
+			m_strFormat = TryGetEx(dictNew, "Format", m_strFormat);
 			m_strFormatNoDatabaseDesc = TryGetEx(dictNew, "FormatNoDatabaseDesc", m_strFormatNoDatabaseDesc);
 			m_strFormatNoDatabaseName = TryGetEx(dictNew, "FormatNoDatabaseName", m_strFormatNoDatabaseName);
 			m_strFormatNoRootEntries = TryGetEx(dictNew, "FormatNoRootEntries", m_strFormatNoRootEntries);
@@ -314,6 +316,7 @@ namespace KeePass.Resources
 			m_strHelpSourceSelection = TryGetEx(dictNew, "HelpSourceSelection", m_strHelpSourceSelection);
 			m_strHelpSourceSelectionDesc = TryGetEx(dictNew, "HelpSourceSelectionDesc", m_strHelpSourceSelectionDesc);
 			m_strHexKey = TryGetEx(dictNew, "HexKey", m_strHexKey);
+			m_strHexViewer = TryGetEx(dictNew, "HexViewer", m_strHexViewer);
 			m_strHideUsingAsterisks = TryGetEx(dictNew, "HideUsingAsterisks", m_strHideUsingAsterisks);
 			m_strHistory = TryGetEx(dictNew, "History", m_strHistory);
 			m_strHomebanking = TryGetEx(dictNew, "Homebanking", m_strHomebanking);
@@ -339,13 +342,14 @@ namespace KeePass.Resources
 			m_strIncompatibleWithSorting = TryGetEx(dictNew, "IncompatibleWithSorting", m_strIncompatibleWithSorting);
 			m_strInheritSettingFromParent = TryGetEx(dictNew, "InheritSettingFromParent", m_strInheritSettingFromParent);
 			m_strInstalled = TryGetEx(dictNew, "Installed", m_strInstalled);
+			m_strInterleavedKeySending = TryGetEx(dictNew, "InterleavedKeySending", m_strInterleavedKeySending);
 			m_strInternet = TryGetEx(dictNew, "Internet", m_strInternet);
 			m_strInvalidKey = TryGetEx(dictNew, "InvalidKey", m_strInvalidKey);
 			m_strInvalidUrl = TryGetEx(dictNew, "InvalidUrl", m_strInvalidUrl);
 			m_strInvalidUserPassword = TryGetEx(dictNew, "InvalidUserPassword", m_strInvalidUserPassword);
 			m_strIOConnection = TryGetEx(dictNew, "IOConnection", m_strIOConnection);
 			m_strItalic = TryGetEx(dictNew, "Italic", m_strItalic);
-			m_strKdb3KeePassLibC = TryGetEx(dictNew, "Kdb3KeePassLibC", m_strKdb3KeePassLibC);
+			m_strKdbKeePassLibC = TryGetEx(dictNew, "KdbKeePassLibC", m_strKdbKeePassLibC);
 			m_strKdbxFiles = TryGetEx(dictNew, "KdbxFiles", m_strKdbxFiles);
 			m_strKeePassEditor = TryGetEx(dictNew, "KeePassEditor", m_strKeePassEditor);
 			m_strKeePassLibCLong = TryGetEx(dictNew, "KeePassLibCLong", m_strKeePassLibCLong);
@@ -463,6 +467,7 @@ namespace KeePass.Resources
 			m_strPluginIncompatible = TryGetEx(dictNew, "PluginIncompatible", m_strPluginIncompatible);
 			m_strPluginLoadFailed = TryGetEx(dictNew, "PluginLoadFailed", m_strPluginLoadFailed);
 			m_strPluginOperatingSystemUnsupported = TryGetEx(dictNew, "PluginOperatingSystemUnsupported", m_strPluginOperatingSystemUnsupported);
+			m_strPluginProvided = TryGetEx(dictNew, "PluginProvided", m_strPluginProvided);
 			m_strPlugins = TryGetEx(dictNew, "Plugins", m_strPlugins);
 			m_strPluginsCompilingAndLoading = TryGetEx(dictNew, "PluginsCompilingAndLoading", m_strPluginsCompilingAndLoading);
 			m_strPluginsDesc = TryGetEx(dictNew, "PluginsDesc", m_strPluginsDesc);
@@ -500,6 +505,7 @@ namespace KeePass.Resources
 			m_strRedo = TryGetEx(dictNew, "Redo", m_strRedo);
 			m_strRememberHidingSettings = TryGetEx(dictNew, "RememberHidingSettings", m_strRememberHidingSettings);
 			m_strRememberKeySources = TryGetEx(dictNew, "RememberKeySources", m_strRememberKeySources);
+			m_strRememberWorkingDirectories = TryGetEx(dictNew, "RememberWorkingDirectories", m_strRememberWorkingDirectories);
 			m_strRemoteHostReachable = TryGetEx(dictNew, "RemoteHostReachable", m_strRemoteHostReachable);
 			m_strRepairMode = TryGetEx(dictNew, "RepairMode", m_strRepairMode);
 			m_strRepeatOnlyWhenHidden = TryGetEx(dictNew, "RepeatOnlyWhenHidden", m_strRepeatOnlyWhenHidden);
@@ -530,7 +536,9 @@ namespace KeePass.Resources
 			m_strSearchResultsInSeparator = TryGetEx(dictNew, "SearchResultsInSeparator", m_strSearchResultsInSeparator);
 			m_strSearchTitle = TryGetEx(dictNew, "SearchTitle", m_strSearchTitle);
 			m_strSecDeskFileDialogHint = TryGetEx(dictNew, "SecDeskFileDialogHint", m_strSecDeskFileDialogHint);
+			m_strSecDeskOtherSwitched = TryGetEx(dictNew, "SecDeskOtherSwitched", m_strSecDeskOtherSwitched);
 			m_strSecDeskPlaySound = TryGetEx(dictNew, "SecDeskPlaySound", m_strSecDeskPlaySound);
+			m_strSecDeskSwitchBack = TryGetEx(dictNew, "SecDeskSwitchBack", m_strSecDeskSwitchBack);
 			m_strSelectAll = TryGetEx(dictNew, "SelectAll", m_strSelectAll);
 			m_strSelectColor = TryGetEx(dictNew, "SelectColor", m_strSelectColor);
 			m_strSelectDifferentGroup = TryGetEx(dictNew, "SelectDifferentGroup", m_strSelectDifferentGroup);
@@ -541,8 +549,10 @@ namespace KeePass.Resources
 			m_strSelectLanguage = TryGetEx(dictNew, "SelectLanguage", m_strSelectLanguage);
 			m_strSelectLanguageDesc = TryGetEx(dictNew, "SelectLanguageDesc", m_strSelectLanguageDesc);
 			m_strSelfTestFailed = TryGetEx(dictNew, "SelfTestFailed", m_strSelfTestFailed);
+			m_strSeparator = TryGetEx(dictNew, "Separator", m_strSeparator);
 			m_strSequence = TryGetEx(dictNew, "Sequence", m_strSequence);
 			m_strShowDerefData = TryGetEx(dictNew, "ShowDerefData", m_strShowDerefData);
+			m_strShowDerefDataAndRefs = TryGetEx(dictNew, "ShowDerefDataAndRefs", m_strShowDerefDataAndRefs);
 			m_strShowDerefDataAsync = TryGetEx(dictNew, "ShowDerefDataAsync", m_strShowDerefDataAsync);
 			m_strShowEntries = TryGetEx(dictNew, "ShowEntries", m_strShowEntries);
 			m_strShowFullPathInTitleBar = TryGetEx(dictNew, "ShowFullPathInTitleBar", m_strShowFullPathInTitleBar);
@@ -656,7 +666,7 @@ namespace KeePass.Resources
 			m_strXslExporter = TryGetEx(dictNew, "XslExporter", m_strXslExporter);
 			m_strXslFileType = TryGetEx(dictNew, "XslFileType", m_strXslFileType);
 			m_strXslSelectFile = TryGetEx(dictNew, "XslSelectFile", m_strXslSelectFile);
-			m_strXslStylesheets = TryGetEx(dictNew, "XslStylesheets", m_strXslStylesheets);
+			m_strXslStylesheetsKdbx = TryGetEx(dictNew, "XslStylesheetsKdbx", m_strXslStylesheetsKdbx);
 			m_strYes = TryGetEx(dictNew, "Yes", m_strYes);
 			m_strZoom = TryGetEx(dictNew, "Zoom", m_strZoom);
 		}
@@ -704,6 +714,7 @@ namespace KeePass.Resources
 			"AutoShowExpiredEntries",
 			"AutoShowSoonToExpireEntries",
 			"AutoType",
+			"AutoTypeCancelOnTitleChange",
 			"AutoTypeCancelOnWindowChange",
 			"AutoTypeEntrySelection",
 			"AutoTypeEntrySelectionDescLong",
@@ -925,6 +936,7 @@ namespace KeePass.Resources
 			"Folder",
 			"Font",
 			"ForceSystemFontUnix",
+			"Format",
 			"FormatNoDatabaseDesc",
 			"FormatNoDatabaseName",
 			"FormatNoRootEntries",
@@ -950,6 +962,7 @@ namespace KeePass.Resources
 			"HelpSourceSelection",
 			"HelpSourceSelectionDesc",
 			"HexKey",
+			"HexViewer",
 			"HideUsingAsterisks",
 			"History",
 			"Homebanking",
@@ -975,13 +988,14 @@ namespace KeePass.Resources
 			"IncompatibleWithSorting",
 			"InheritSettingFromParent",
 			"Installed",
+			"InterleavedKeySending",
 			"Internet",
 			"InvalidKey",
 			"InvalidUrl",
 			"InvalidUserPassword",
 			"IOConnection",
 			"Italic",
-			"Kdb3KeePassLibC",
+			"KdbKeePassLibC",
 			"KdbxFiles",
 			"KeePassEditor",
 			"KeePassLibCLong",
@@ -1099,6 +1113,7 @@ namespace KeePass.Resources
 			"PluginIncompatible",
 			"PluginLoadFailed",
 			"PluginOperatingSystemUnsupported",
+			"PluginProvided",
 			"Plugins",
 			"PluginsCompilingAndLoading",
 			"PluginsDesc",
@@ -1136,6 +1151,7 @@ namespace KeePass.Resources
 			"Redo",
 			"RememberHidingSettings",
 			"RememberKeySources",
+			"RememberWorkingDirectories",
 			"RemoteHostReachable",
 			"RepairMode",
 			"RepeatOnlyWhenHidden",
@@ -1166,7 +1182,9 @@ namespace KeePass.Resources
 			"SearchResultsInSeparator",
 			"SearchTitle",
 			"SecDeskFileDialogHint",
+			"SecDeskOtherSwitched",
 			"SecDeskPlaySound",
+			"SecDeskSwitchBack",
 			"SelectAll",
 			"SelectColor",
 			"SelectDifferentGroup",
@@ -1177,8 +1195,10 @@ namespace KeePass.Resources
 			"SelectLanguage",
 			"SelectLanguageDesc",
 			"SelfTestFailed",
+			"Separator",
 			"Sequence",
 			"ShowDerefData",
+			"ShowDerefDataAndRefs",
 			"ShowDerefDataAsync",
 			"ShowEntries",
 			"ShowFullPathInTitleBar",
@@ -1292,7 +1312,7 @@ namespace KeePass.Resources
 			"XslExporter",
 			"XslFileType",
 			"XslSelectFile",
-			"XslStylesheets",
+			"XslStylesheetsKdbx",
 			"Yes",
 			"Zoom"
 		};
@@ -1762,6 +1782,17 @@ namespace KeePass.Resources
 		public static string AutoType
 		{
 			get { return m_strAutoType; }
+		}
+
+		private static string m_strAutoTypeCancelOnTitleChange =
+			@"Cancel auto-type when the target window title changes";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Cancel auto-type when the target window title changes'.
+		/// </summary>
+		public static string AutoTypeCancelOnTitleChange
+		{
+			get { return m_strAutoTypeCancelOnTitleChange; }
 		}
 
 		private static string m_strAutoTypeCancelOnWindowChange =
@@ -4195,6 +4226,17 @@ namespace KeePass.Resources
 			get { return m_strForceSystemFontUnix; }
 		}
 
+		private static string m_strFormat =
+			@"Format";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Format'.
+		/// </summary>
+		public static string Format
+		{
+			get { return m_strFormat; }
+		}
+
 		private static string m_strFormatNoDatabaseDesc =
 			@"This file format doesn't support database descriptions.";
 		/// <summary>
@@ -4468,6 +4510,17 @@ namespace KeePass.Resources
 		public static string HexKey
 		{
 			get { return m_strHexKey; }
+		}
+
+		private static string m_strHexViewer =
+			@"Hex Viewer";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Hex Viewer'.
+		/// </summary>
+		public static string HexViewer
+		{
+			get { return m_strHexViewer; }
 		}
 
 		private static string m_strHideUsingAsterisks =
@@ -4745,6 +4798,17 @@ namespace KeePass.Resources
 			get { return m_strInstalled; }
 		}
 
+		private static string m_strInterleavedKeySending =
+			@"Allow interleaved sending of keys";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Allow interleaved sending of keys'.
+		/// </summary>
+		public static string InterleavedKeySending
+		{
+			get { return m_strInterleavedKeySending; }
+		}
+
 		private static string m_strInternet =
 			@"Internet";
 		/// <summary>
@@ -4811,15 +4875,15 @@ namespace KeePass.Resources
 			get { return m_strItalic; }
 		}
 
-		private static string m_strKdb3KeePassLibC =
+		private static string m_strKdbKeePassLibC =
 			@"The KeePassLibC library is required to open and save KDB files created by KeePass 1.x.";
 		/// <summary>
 		/// Look up a localized string similar to
 		/// 'The KeePassLibC library is required to open and save KDB files created by KeePass 1.x.'.
 		/// </summary>
-		public static string Kdb3KeePassLibC
+		public static string KdbKeePassLibC
 		{
-			get { return m_strKdb3KeePassLibC; }
+			get { return m_strKdbKeePassLibC; }
 		}
 
 		private static string m_strKdbxFiles =
@@ -6109,6 +6173,17 @@ namespace KeePass.Resources
 			get { return m_strPluginOperatingSystemUnsupported; }
 		}
 
+		private static string m_strPluginProvided =
+			@"Provided by Plugins";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Provided by Plugins'.
+		/// </summary>
+		public static string PluginProvided
+		{
+			get { return m_strPluginProvided; }
+		}
+
 		private static string m_strPlugins =
 			@"Plugins";
 		/// <summary>
@@ -6516,6 +6591,17 @@ namespace KeePass.Resources
 			get { return m_strRememberKeySources; }
 		}
 
+		private static string m_strRememberWorkingDirectories =
+			@"Remember working directories";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Remember working directories'.
+		/// </summary>
+		public static string RememberWorkingDirectories
+		{
+			get { return m_strRememberWorkingDirectories; }
+		}
+
 		private static string m_strRemoteHostReachable =
 			@"Remote host is reachable (ping)";
 		/// <summary>
@@ -6846,6 +6932,17 @@ namespace KeePass.Resources
 			get { return m_strSecDeskFileDialogHint; }
 		}
 
+		private static string m_strSecDeskOtherSwitched =
+			@"An application has switched from the secure desktop to a different desktop.";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'An application has switched from the secure desktop to a different desktop.'.
+		/// </summary>
+		public static string SecDeskOtherSwitched
+		{
+			get { return m_strSecDeskOtherSwitched; }
+		}
+
 		private static string m_strSecDeskPlaySound =
 			@"Play UAC sound when switching to secure desktop";
 		/// <summary>
@@ -6855,6 +6952,17 @@ namespace KeePass.Resources
 		public static string SecDeskPlaySound
 		{
 			get { return m_strSecDeskPlaySound; }
+		}
+
+		private static string m_strSecDeskSwitchBack =
+			@"Click [OK] to switch back to the secure desktop.";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Click [OK] to switch back to the secure desktop.'.
+		/// </summary>
+		public static string SecDeskSwitchBack
+		{
+			get { return m_strSecDeskSwitchBack; }
 		}
 
 		private static string m_strSelectAll =
@@ -6967,6 +7075,17 @@ namespace KeePass.Resources
 			get { return m_strSelfTestFailed; }
 		}
 
+		private static string m_strSeparator =
+			@"Separator";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'Separator'.
+		/// </summary>
+		public static string Separator
+		{
+			get { return m_strSeparator; }
+		}
+
 		private static string m_strSequence =
 			@"Sequence";
 		/// <summary>
@@ -6987,6 +7106,17 @@ namespace KeePass.Resources
 		public static string ShowDerefData
 		{
 			get { return m_strShowDerefData; }
+		}
+
+		private static string m_strShowDerefDataAndRefs =
+			@"When showing dereferenced data, additionally show references";
+		/// <summary>
+		/// Look up a localized string similar to
+		/// 'When showing dereferenced data, additionally show references'.
+		/// </summary>
+		public static string ShowDerefDataAndRefs
+		{
+			get { return m_strShowDerefDataAndRefs; }
 		}
 
 		private static string m_strShowDerefDataAsync =
@@ -7782,10 +7912,10 @@ namespace KeePass.Resources
 		}
 
 		private static string m_strUpdateCheckInfoPriv =
-			@"No personal information is sent to the KeePass server. KeePass just downloads a small version information file and compares the available version with the installed version.";
+			@"No personal information is sent to the KeePass web server. KeePass just downloads a small version information file and compares the available version with the installed version.";
 		/// <summary>
 		/// Look up a localized string similar to
-		/// 'No personal information is sent to the KeePass server. KeePass just downloads a small version information file and compares the available version with the installed version.'.
+		/// 'No personal information is sent to the KeePass web server. KeePass just downloads a small version information file and compares the available version with the installed version.'.
 		/// </summary>
 		public static string UpdateCheckInfoPriv
 		{
@@ -8232,15 +8362,15 @@ namespace KeePass.Resources
 			get { return m_strXslSelectFile; }
 		}
 
-		private static string m_strXslStylesheets =
-			@"XSL Stylesheets for KDB4 XML";
+		private static string m_strXslStylesheetsKdbx =
+			@"XSL Stylesheets for KDBX XML";
 		/// <summary>
 		/// Look up a localized string similar to
-		/// 'XSL Stylesheets for KDB4 XML'.
+		/// 'XSL Stylesheets for KDBX XML'.
 		/// </summary>
-		public static string XslStylesheets
+		public static string XslStylesheetsKdbx
 		{
-			get { return m_strXslStylesheets; }
+			get { return m_strXslStylesheetsKdbx; }
 		}
 
 		private static string m_strYes =

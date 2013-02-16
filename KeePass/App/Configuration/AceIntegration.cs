@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -164,12 +164,28 @@ namespace KeePass.App.Configuration
 			set { m_bAdjustKeybLayout = value; }
 		}
 
+		private bool m_bAllowInterleaved = false;
+		[DefaultValue(false)]
+		public bool AutoTypeAllowInterleaved
+		{
+			get { return m_bAllowInterleaved; }
+			set { m_bAllowInterleaved = value; }
+		}
+
 		private bool m_bCancelOnWindowChange = false;
 		[DefaultValue(false)]
 		public bool AutoTypeCancelOnWindowChange
 		{
 			get { return m_bCancelOnWindowChange; }
 			set { m_bCancelOnWindowChange = value; }
+		}
+
+		private bool m_bCancelOnTitleChange = false;
+		[DefaultValue(false)]
+		public bool AutoTypeCancelOnTitleChange
+		{
+			get { return m_bCancelOnTitleChange; }
+			set { m_bCancelOnTitleChange = value; }
 		}
 
 		private ProxyServerType m_pstProxyType = ProxyServerType.System;

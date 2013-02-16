@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
@@ -80,7 +81,8 @@ namespace KeePass
 			IpcByFile = 3,
 			AutoType = 4,
 			Lock = 5,
-			Unlock = 6
+			Unlock = 6,
+			AutoTypeSelected = 7
 		}
 
 		public static CommandLineArgs CommandLineArgs
@@ -203,6 +205,10 @@ namespace KeePass
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.DoEvents(); // Required
 
+#if DEBUG
+			string strInitialWorkDir = WinUtil.GetWorkingDirectory();
+#endif
+
 			if(!CommonInit()) { CommonTerminate(); return; }
 
 			if(m_appConfig.Application.Start.PluginCacheClearOnce)
@@ -279,7 +285,7 @@ namespace KeePass
 				try
 				{
 					string strFileOut = UrlUtil.EnsureTerminatingSeparator(
-						Path.GetTempPath(), false) + "KeePass_UrlOverride.tmp";
+						UrlUtil.GetTempPath(), false) + "KeePass_UrlOverride.tmp";
 					string strContent = ("[KeePass]\r\nKeeURLOverride=" +
 						Program.Config.Integration.UrlOverride + "\r\n");
 					File.WriteAllText(strFileOut, strContent);
@@ -340,6 +346,11 @@ namespace KeePass
 			else if(m_cmdLineArgs[AppDefs.CommandLineOptions.AutoType] != null)
 			{
 				BroadcastAppMessageAndCleanUp(AppMessage.AutoType);
+				return;
+			}
+			else if(m_cmdLineArgs[AppDefs.CommandLineOptions.AutoTypeSelected] != null)
+			{
+				BroadcastAppMessageAndCleanUp(AppMessage.AutoTypeSelected);
 				return;
 			}
 			else if(m_cmdLineArgs[AppDefs.CommandLineOptions.OpenEntryUrl] != null)
@@ -408,6 +419,11 @@ namespace KeePass
 
 			MainCleanUp();
 
+#if DEBUG
+			string strEndWorkDir = WinUtil.GetWorkingDirectory();
+			Debug.Assert(strEndWorkDir.Equals(strInitialWorkDir, StrUtil.CaseIgnoreCmp));
+#endif
+
 			if(mGlobalNotify != null) { GC.KeepAlive(mGlobalNotify); }
 			// if(mSingleLock != null) { GC.KeepAlive(mSingleLock); }
 		}
@@ -435,7 +451,7 @@ namespace KeePass
 
 			// Set global localized strings
 			PwDatabase.LocalizedAppName = PwDefs.ShortProductName;
-			Kdb4File.DetermineLanguageId();
+			KdbxFile.DetermineLanguageId();
 
 			m_appConfig = AppConfigSerializer.Load();
 			if(m_appConfig.Logging.Enabled)
@@ -557,8 +573,10 @@ namespace KeePass
 				}
 				else
 				{
+					string[] vFlt = KeyUtil.MakeCtxIndependent(args);
+
 					IpcParamEx ipcMsg = new IpcParamEx(IpcUtilEx.CmdOpenDatabase,
-						CommandLineArgs.SafeSerialize(args), null, null, null, null);
+						CommandLineArgs.SafeSerialize(vFlt), null, null, null, null);
 
 					IpcUtilEx.SendGlobalMessage(ipcMsg);
 				}

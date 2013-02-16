@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.Diagnostics;
@@ -285,12 +286,50 @@ namespace KeePassLib.Utility
 
 			const int nBufSize = 4096;
 			byte[] pbBuf = new byte[nBufSize];
-			int nRead;
 
-			while((nRead = sSource.Read(pbBuf, 0, nBufSize)) > 0)
+			while(true)
+			{
+				int nRead = sSource.Read(pbBuf, 0, nBufSize);
+				if(nRead == 0) break;
+
 				sTarget.Write(pbBuf, 0, nRead);
+			}
 
 			// Do not close any of the streams
+		}
+
+		public static byte[] Read(Stream s, int nCount)
+		{
+			if(s == null) throw new ArgumentNullException("s");
+			if(nCount < 0) throw new ArgumentOutOfRangeException("nCount");
+
+			byte[] pb = new byte[nCount];
+			int iOffset = 0;
+			while(nCount > 0)
+			{
+				int iRead = s.Read(pb, iOffset, nCount);
+				if(iRead == 0) break;
+
+				iOffset += iRead;
+				nCount -= iRead;
+			}
+
+			if(iOffset != pb.Length)
+			{
+				byte[] pbPart = new byte[iOffset];
+				Array.Copy(pb, pbPart, iOffset);
+				return pbPart;
+			}
+
+			return pb;
+		}
+
+		public static void Write(Stream s, byte[] pbData)
+		{
+			if(s == null) { Debug.Assert(false); return; }
+			if(pbData == null) { Debug.Assert(false); return; }
+
+			s.Write(pbData, 0, pbData.Length);
 		}
 
 		public static byte[] Compress(byte[] pbData)
@@ -356,11 +395,81 @@ namespace KeePassLib.Utility
 			if(v == null) throw new ArgumentNullException("v");
 			if(iOffset < 0) throw new ArgumentOutOfRangeException("iOffset");
 			if(iLength < 0) throw new ArgumentOutOfRangeException("iLength");
-			if(iOffset + iLength > v.Length) throw new ArgumentException();
+			if((iOffset + iLength) > v.Length) throw new ArgumentException();
 
 			T[] r = new T[iLength];
 			Array.Copy(v, iOffset, r, 0, iLength);
 			return r;
+		}
+
+		public static IEnumerable<T> Union<T>(IEnumerable<T> a, IEnumerable<T> b,
+			IEqualityComparer<T> cmp)
+		{
+			if(a == null) throw new ArgumentNullException("a");
+			if(b == null) throw new ArgumentNullException("b");
+
+			Dictionary<T, bool> d = ((cmp != null) ?
+				(new Dictionary<T, bool>(cmp)) : (new Dictionary<T, bool>()));
+
+			foreach(T ta in a)
+			{
+				if(d.ContainsKey(ta)) continue; // Prevent duplicates
+
+				d[ta] = true;
+				yield return ta;
+			}
+
+			foreach(T tb in b)
+			{
+				if(d.ContainsKey(tb)) continue; // Prevent duplicates
+
+				d[tb] = true;
+				yield return tb;
+			}
+
+			yield break;
+		}
+
+		public static IEnumerable<T> Intersect<T>(IEnumerable<T> a, IEnumerable<T> b,
+			IEqualityComparer<T> cmp)
+		{
+			if(a == null) throw new ArgumentNullException("a");
+			if(b == null) throw new ArgumentNullException("b");
+
+			Dictionary<T, bool> d = ((cmp != null) ?
+				(new Dictionary<T, bool>(cmp)) : (new Dictionary<T, bool>()));
+
+			foreach(T tb in b) { d[tb] = true; }
+
+			foreach(T ta in a)
+			{
+				if(d.Remove(ta)) // Prevent duplicates
+					yield return ta;
+			}
+
+			yield break;
+		}
+
+		public static IEnumerable<T> Except<T>(IEnumerable<T> a, IEnumerable<T> b,
+			IEqualityComparer<T> cmp)
+		{
+			if(a == null) throw new ArgumentNullException("a");
+			if(b == null) throw new ArgumentNullException("b");
+
+			Dictionary<T, bool> d = ((cmp != null) ?
+				(new Dictionary<T, bool>(cmp)) : (new Dictionary<T, bool>()));
+
+			foreach(T tb in b) { d[tb] = true; }
+
+			foreach(T ta in a)
+			{
+				if(d.ContainsKey(ta)) continue;
+
+				d[ta] = true; // Prevent duplicates
+				yield return ta;
+			}
+
+			yield break;
 		}
 	}
 }

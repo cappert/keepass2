@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -201,7 +201,8 @@ namespace KeePass.Util
 
 		private static string GetMutexPath(string strName)
 		{
-			string strDir = UrlUtil.EnsureTerminatingSeparator(Path.GetTempPath(), false);
+			string strDir = UrlUtil.EnsureTerminatingSeparator(
+				UrlUtil.GetTempPath(), false);
 			return (strDir + IpcUtilEx.IpcMsgFilePreID + IpcBroadcast.GetUserID() +
 				"-Mutex-" + strName + ".tmp");
 		}

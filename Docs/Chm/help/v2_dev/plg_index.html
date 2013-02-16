@@ -10,10 +10,6 @@
 
 	<meta name="robots" content="index" />
 
-	<meta http-equiv="expires" content="0" />
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="pragma" content="no-cache" />
-
 	<meta name="DC.Title" content="KeePass - The Open Source Password Manager" />
 	<meta name="DC.Creator" content="Dominik Reichl" />
 	<meta name="DC.Subject" content="Open-Source Password Safe" />
@@ -24,7 +20,7 @@
 	<meta name="DC.Format" content="text/html" />
 	<meta name="DC.Identifier" content="http://keepass.info/" />
 	<meta name="DC.Language" content="en" />
-	<meta name="DC.Rights" content="Copyright (c) 2003-2012 Dominik Reichl" />
+	<meta name="DC.Rights" content="Copyright (c) 2003-2013 Dominik Reichl" />
 
 	<title>Plugin Development - KeePass</title>
 	<base target="_self" />
@@ -127,7 +123,7 @@ already, which must be followed by all plugins:</p>
 <li>The namespace must be named like the DLL file without extension. Our DLL
 file is named <code>SamplePlugin.dll</code>, therefore the namespace must
 be called <code>SamplePlugin</code>.</li>
-<li>The main plugin class (which KeePass will instanciate when it loads your
+<li>The main plugin class (which KeePass will instantiate when it loads your
 plugin) must be called exactly the same as the namespace plus &quot;Ext&quot;.
 In this case: &quot;SamplePlugin&quot; + &quot;Ext&quot; = &quot;SamplePluginExt&quot;.</li>
 <li>The main plugin class must be derived from the <code>KeePass.Plugins.Plugin</code>
@@ -322,7 +318,10 @@ they release new versions of their plugins.</p>
 <p><b>Version information file format.</b></p>
 <ul>
 <li>The file is a simple text file. It must be encoded using UTF-8 without
-byte order marks (BOM). All line endings are supported.</li>
+a byte order mark (KeePass &ge; 2.21 supports UTF-8 BOMs in version information
+files, however for compatibility with KeePass &lt; 2.21 it is recommended
+not to use a BOM).
+All line endings are supported.</li>
 <li>The first line of the file must start with a separator character of
 your choice. The separator character may be any character,
 but it must not appear within plugin names and versions.

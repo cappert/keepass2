@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -147,11 +147,11 @@ namespace KeePass.Forms
 			m_lvPolicy.Columns.Add(KPRes.Description, (nWidth * 19) / 29);
 
 			m_hkGlobalAutoType = HotKeyControlEx.ReplaceTextBox(m_grpHotKeys,
-				m_tbGlobalAutoType, true);
+				m_tbGlobalAutoType, false);
 			m_hkSelectedAutoType = HotKeyControlEx.ReplaceTextBox(m_grpHotKeys,
-				m_tbSelAutoTypeHotKey, true);
+				m_tbSelAutoTypeHotKey, false);
 			m_hkShowWindow = HotKeyControlEx.ReplaceTextBox(m_grpHotKeys,
-				m_tbShowWindowHotKey, true);
+				m_tbShowWindowHotKey, false);
 
 			if(!NativeLib.IsUnix())
 			{
@@ -373,6 +373,9 @@ namespace KeePass.Forms
 			m_cdxGuiOptions.AddLink(lviDeref, lviDerefAsync, CheckItemLinkType.UncheckedUnchecked);
 			m_cdxGuiOptions.AddLink(lviDerefAsync, lviDeref, CheckItemLinkType.CheckedChecked);
 
+			m_cdxGuiOptions.CreateItem(Program.Config.MainWindow, "EntryListShowDerefDataAndRefs",
+				lvg, KPRes.ShowDerefDataAndRefs);
+
 			// lvg = new ListViewGroup(KPRes.EntryView);
 			// m_lvGuiOptions.Groups.Add(lvg);
 			// m_cdxGuiOptions.CreateItem(Program.Config.MainWindow.EntryView, "HideProtectedCustomStrings",
@@ -506,8 +509,12 @@ namespace KeePass.Forms
 				lvg, KPRes.AutoTypeReleaseAltWithKeyPress);
 			m_cdxAdvanced.CreateItem(Program.Config.Integration, "AutoTypeAdjustKeyboardLayout",
 				lvg, KPRes.SameKeybLayout);
+			m_cdxAdvanced.CreateItem(Program.Config.Integration, "AutoTypeAllowInterleaved",
+				lvg, KPRes.InterleavedKeySending);
 			m_cdxAdvanced.CreateItem(Program.Config.Integration, "AutoTypeCancelOnWindowChange",
 				lvg, KPRes.AutoTypeCancelOnWindowChange);
+			m_cdxAdvanced.CreateItem(Program.Config.Integration, "AutoTypeCancelOnTitleChange",
+				lvg, KPRes.AutoTypeCancelOnTitleChange);
 
 			lvg = new ListViewGroup(KPRes.Advanced);
 			m_lvAdvanced.Groups.Add(lvg);
@@ -525,6 +532,8 @@ namespace KeePass.Forms
 
 			m_cdxAdvanced.CreateItem(Program.Config.Defaults, "RememberKeySources",
 				lvg, KPRes.RememberKeySources);
+			m_cdxAdvanced.CreateItem(Program.Config.Application, "RememberWorkingDirectories",
+				lvg, KPRes.RememberWorkingDirectories);
 			m_cdxAdvanced.CreateItem(Program.Config.UI.Hiding, "SeparateHidingSettings",
 				lvg, KPRes.RememberHidingSettings);
 			m_cdxAdvanced.CreateItem(Program.Config.UI.Hiding, "UnhideButtonAlsoUnhidesSource",
@@ -639,6 +648,8 @@ namespace KeePass.Forms
 			int nTab = m_tabMain.SelectedIndex;
 			if((nTab >= 0) && (nTab < m_tabMain.TabPages.Count))
 				Program.Config.Defaults.OptionsTabIndex = (uint)nTab;
+
+			m_tabMain.ImageList = null; // Detach event handlers
 
 			m_cdxSecurityOptions.Release();
 			m_cdxPolicy.Release();
@@ -817,6 +828,7 @@ namespace KeePass.Forms
 
 		private void OnFormClosed(object sender, FormClosedEventArgs e)
 		{
+			CleanUpEx();
 			GlobalWindowManager.RemoveWindow(this);
 		}
 
@@ -835,11 +847,6 @@ namespace KeePass.Forms
 			UrlSchemesForm dlg = new UrlSchemesForm();
 			dlg.InitEx(m_aceUrlSchemeOverrides);
 			UIUtil.ShowDialogAndDestroy(dlg);
-		}
-
-		private void OnFormClosing(object sender, FormClosingEventArgs e)
-		{
-			CleanUpEx();
 		}
 
 		private void OnHotKeyHelpLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

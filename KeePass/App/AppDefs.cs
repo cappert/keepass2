@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -37,9 +37,9 @@ namespace KeePass.App
 		public static readonly Color ColorEditError = Color.FromArgb(255, 192, 192);
 
 		public const string XslFilesDir = "XSL";
-		public const string XslFileHtmlLite = "KDB4_DetailsLite.xsl";
-		public const string XslFileHtmlFull = "KDB4_DetailsFull.xsl";
-		public const string XslFileHtmlTabular = "KDB4_Tabular.xsl";
+		public const string XslFileHtmlLite = "KDBX_DetailsLite.xsl";
+		public const string XslFileHtmlFull = "KDBX_DetailsFull.xsl";
+		public const string XslFileHtmlTabular = "KDBX_Tabular.xsl";
 
 		public const string ShInstUtil = "ShInstUtil.exe";
 
@@ -87,6 +87,7 @@ namespace KeePass.App
 			public const string FieldRefs = "base/fieldrefs";
 
 			public const string ImportExport = "base/importexport";
+			// public const string ImportExportGenericCsv = "genericcsv";
 			public const string ImportExportSteganos = "imp_steganos";
 			public const string ImportExportPassKeeper = "imp_passkeeper";
 
@@ -111,6 +112,7 @@ namespace KeePass.App
 			public const string UserAccount = "useraccount";
 
 			public const string PasswordEncrypted = "pw-enc";
+			public const string PasswordStdIn = "pw-stdin";
 
 			public const string PreSelect = "preselect";
 
@@ -129,6 +131,7 @@ namespace KeePass.App
 			public const string ExitAll = "exit-all";
 			public const string Minimize = "minimize";
 			public const string AutoType = "auto-type";
+			public const string AutoTypeSelected = "auto-type-selected";
 			public const string OpenEntryUrl = "entry-url-open";
 			public const string LockAll = "lock-all";
 			public const string UnlockAll = "unlock-all";
@@ -188,6 +191,19 @@ namespace KeePass.App
 			public static readonly Color LightGreen = Color.FromArgb(204, 255, 204);
 			public static readonly Color LightBlue = Color.FromArgb(153, 204, 255);
 			public static readonly Color LightYellow = Color.FromArgb(255, 255, 153);
+		}
+
+		public static class FileDialogContext
+		{
+			// Values must not contain '@'
+
+			public const string Database = "Database";
+			public const string Sync = "Sync";
+			public const string KeyFile = "KeyFile";
+			public const string Import = "Import";
+			public const string Export = "Export";
+			public const string Attachments = "Attachments";
+			public const string Xsl = "Xsl";
 		}
 
 		public const string DefaultTrlAuthor = "Dominik Reichl";
