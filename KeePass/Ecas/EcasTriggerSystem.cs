@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -149,9 +149,8 @@ namespace KeePass.Ecas
 			}
 			catch(Exception ex)
 			{
-				if(VistaTaskDialog.ShowMessageBox(ex.Message, KPRes.TriggerExecutionFailed,
-					PwDefs.ShortProductName, VtdIcon.Warning,
-					Program.GetSafeMainWindowHandle()) == false)
+				if(!VistaTaskDialog.ShowMessageBox(ex.Message, KPRes.TriggerExecutionFailed,
+					PwDefs.ShortProductName, VtdIcon.Warning, null))
 				{
 					MessageService.ShowWarning(KPRes.TriggerExecutionFailed + ".", ex);
 				}

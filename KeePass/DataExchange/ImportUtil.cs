@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -90,8 +90,9 @@ namespace KeePass.DataExchange
 			List<IOConnectionInfo> vConnections = new List<IOConnectionInfo>();
 			if(bOpenFromUrl == false)
 			{
-				OpenFileDialog ofd = UIUtil.CreateOpenFileDialog(KPRes.Synchronize,
-					UIUtil.CreateFileTypeFilter(null, null, true), 1, null, true, true);
+				OpenFileDialogEx ofd = UIUtil.CreateOpenFileDialog(KPRes.Synchronize,
+					UIUtil.CreateFileTypeFilter(null, null, true), 1, null, true,
+					AppDefs.FileDialogContext.Sync);
 
 				if(ofd.ShowDialog() != DialogResult.OK) return null;
 
@@ -278,8 +279,9 @@ namespace KeePass.DataExchange
 							}
 							else { } // No assert (sync on save)
 
-							Program.MainForm.FileMruList.AddItem(ioc.GetDisplayName(),
-								ioc.CloneDeep(), true);
+							if(Program.MainForm != null) // Null for KPScript
+								Program.MainForm.FileMruList.AddItem(
+									ioc.GetDisplayName(), ioc.CloneDeep(), true);
 						}
 						catch(Exception exSync)
 						{
@@ -359,6 +361,7 @@ namespace KeePass.DataExchange
 			"item", "itemname", "item name", "subject",
 			"service", "servicename", "service name",
 			"head", "heading", "card", "product", "provider", "bank",
+			"type",
 
 			// Non-English names
 			"seite"
@@ -381,13 +384,13 @@ namespace KeePass.DataExchange
 			"secret", "secret word",
 			"key", "keyword", "key word", "keyphrase", "key phrase",
 			"form_pw", "wppassword", "pin", "pwd", "pw", "pword",
-			"p", "serial", @"serial#"
+			"p", "serial", @"serial#", "license key"
 		};
 
 		private static readonly string[] m_vUrls = {
 			"url", "hyper link", "hyperlink", "link",
-			"host", "address", "hyper ref", "href",
-			"web", "website", "web site", "site",
+			"host", "hostname", "host name", "server", "address",
+			"hyper ref", "href", "web", "website", "web site", "site",
 
 			// Non-English names
 			"ort"
@@ -482,6 +485,15 @@ namespace KeePass.DataExchange
 		public static void AppendToField(PwEntry pe, string strName, string strValue,
 			PwDatabase pdContext)
 		{
+			AppendToField(pe, strName, strValue, pdContext, null, false);
+		}
+
+		public static void AppendToField(PwEntry pe, string strName, string strValue,
+			PwDatabase pdContext, string strSeparator, bool bOnlyIfNotDup)
+		{
+			// Default separator must be single-line compatible
+			if(strSeparator == null) strSeparator = ", ";
+
 			bool bProtect = ((pdContext == null) ? false :
 				pdContext.MemoryProtection.GetProtection(strName));
 
@@ -493,8 +505,16 @@ namespace KeePass.DataExchange
 			if(string.IsNullOrEmpty(strPrev))
 				pe.Strings.Set(strName, new ProtectedString(bProtect, strValue));
 			else if(strValue.Length > 0)
-				pe.Strings.Set(strName, new ProtectedString(bProtect,
-					strPrev + @", " + strValue));
+			{
+				bool bAppend = true;
+
+				if(bOnlyIfNotDup)
+					bAppend &= (strPrev != strValue);
+
+				if(bAppend)
+					pe.Strings.Set(strName, new ProtectedString(bProtect,
+						strPrev + strSeparator + strValue));
+			}
 		}
 
 		public static bool EntryEquals(PwEntry pe1, PwEntry pe2)

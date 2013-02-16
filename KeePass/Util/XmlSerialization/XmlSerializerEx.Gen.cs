@@ -196,6 +196,12 @@ namespace KeePass.Util.XmlSerialization
 					case "MostRecentlyUsed":
 						o.MostRecentlyUsed = ReadAceMru(xr);
 						break;
+					case "RememberWorkingDirectories":
+						o.RememberWorkingDirectories = ReadBoolean(xr);
+						break;
+					case "WorkingDirectories":
+						o.WorkingDirectoriesSerialized = ReadArrayOfString(xr);
+						break;
 					case "Start":
 						o.Start = ReadAceStartUp(xr);
 						break;
@@ -385,6 +391,9 @@ namespace KeePass.Util.XmlSerialization
 						break;
 					case "EntryListShowDerefDataAsync":
 						o.EntryListShowDerefDataAsync = ReadBoolean(xr);
+						break;
+					case "EntryListShowDerefDataAndRefs":
+						o.EntryListShowDerefDataAndRefs = ReadBoolean(xr);
 						break;
 					case "ListSorting":
 						o.ListSorting = ReadListSorter(xr);
@@ -773,8 +782,14 @@ namespace KeePass.Util.XmlSerialization
 					case "AutoTypeAdjustKeyboardLayout":
 						o.AutoTypeAdjustKeyboardLayout = ReadBoolean(xr);
 						break;
+					case "AutoTypeAllowInterleaved":
+						o.AutoTypeAllowInterleaved = ReadBoolean(xr);
+						break;
 					case "AutoTypeCancelOnWindowChange":
 						o.AutoTypeCancelOnWindowChange = ReadBoolean(xr);
+						break;
+					case "AutoTypeCancelOnTitleChange":
+						o.AutoTypeCancelOnTitleChange = ReadBoolean(xr);
 						break;
 					case "ProxyType":
 						o.ProxyType = ReadProxyServerType(xr);
@@ -1045,6 +1060,33 @@ namespace KeePass.Util.XmlSerialization
 			Debug.Assert(xr.NodeType == XmlNodeType.EndElement);
 			xr.ReadEndElement();
 			return o;
+		}
+
+		private static System.String[] ReadArrayOfString(XmlReader xr)
+		{
+			List<System.String> l = new List<System.String>();
+
+			if(SkipEmptyElement(xr)) return l.ToArray();
+
+			Debug.Assert(xr.NodeType == XmlNodeType.Element);
+			xr.ReadStartElement();
+			xr.MoveToContent();
+
+			while(true)
+			{
+				XmlNodeType nt = xr.NodeType;
+				if((nt == XmlNodeType.EndElement) || (nt == XmlNodeType.None)) break;
+				if(nt != XmlNodeType.Element) { Debug.Assert(false); continue; }
+
+				System.String oElem = ReadString(xr);
+				l.Add(oElem);
+
+				xr.MoveToContent();
+			}
+
+			Debug.Assert(xr.NodeType == XmlNodeType.EndElement);
+			xr.ReadEndElement();
+			return l.ToArray();
 		}
 
 		private static KeePass.App.Configuration.AceStartUp ReadAceStartUp(XmlReader xr)

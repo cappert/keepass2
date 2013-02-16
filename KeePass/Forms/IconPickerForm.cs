@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 
+using KeePass.App;
 using KeePass.Resources;
 using KeePass.UI;
 
@@ -94,11 +95,15 @@ namespace KeePass.Forms
 			{
 				m_radioCustom.Checked = true;
 				m_lvCustomIcons.Items[iFoundCustom].Selected = true;
+				m_lvCustomIcons.EnsureVisible(iFoundCustom);
+				UIUtil.SetFocus(m_lvCustomIcons, this);
 			}
 			else if(m_uDefaultIcon < m_uNumberOfStandardIcons)
 			{
 				m_radioStandard.Checked = true;
 				m_lvIcons.Items[(int)m_uDefaultIcon].Selected = true;
+				m_lvIcons.EnsureVisible((int)m_uDefaultIcon);
+				UIUtil.SetFocus(m_lvIcons, this);
 			}
 			else
 			{
@@ -164,7 +169,11 @@ namespace KeePass.Forms
 
 		private void OnBtnOK(object sender, EventArgs e)
 		{
-			// SaveChosenIcon();
+			if(!SaveChosenIcon())
+			{
+				this.DialogResult = DialogResult.None;
+				MessageService.ShowWarning(KPRes.PickIcon);
+			}
 		}
 
 		private bool SaveChosenIcon()
@@ -201,8 +210,16 @@ namespace KeePass.Forms
 			EnableControlsEx();
 		}
 
+		private void CleanUpEx()
+		{
+			// Detach event handlers
+			m_lvIcons.SmallImageList = null;
+			m_lvCustomIcons.SmallImageList = null;
+		}
+
 		private void OnFormClosed(object sender, FormClosedEventArgs e)
 		{
+			CleanUpEx();
 			GlobalWindowManager.RemoveWindow(this);
 		}
 
@@ -228,8 +245,8 @@ namespace KeePass.Forms
 			AddFileType(sbFilter, "*.wmf", "Windows Metafile (*.wmf)");
 			sbFilter.Append(@"|" + KPRes.AllFiles + @" (*.*)|*.*");
 
-			OpenFileDialog ofd = UIUtil.CreateOpenFileDialog(KPRes.ImportFileTitle,
-				sbFilter.ToString(), 1, null, true, true);
+			OpenFileDialogEx ofd = UIUtil.CreateOpenFileDialog(KPRes.ImportFileTitle,
+				sbFilter.ToString(), 1, null, true, AppDefs.FileDialogContext.Import);
 
 			if(ofd.ShowDialog() == DialogResult.OK)
 			{
@@ -249,17 +266,23 @@ namespace KeePass.Forms
 						// Bitmap img = new Bitmap(strFile);
 						// Image img = Image.FromFile(strFile);
 						byte[] pb = File.ReadAllBytes(strFile);
-						
+
 						// MemoryStream msSource = new MemoryStream(pb, false);
 						// Image img = Image.FromStream(msSource);
 						// msSource.Close();
 
-						Image img = UIUtil.LoadImage(pb);
-
-						Image imgNew = new Bitmap(img, new Size(16, 16));
-
+						Image img = GfxUtil.LoadImage(pb);
 						MemoryStream ms = new MemoryStream();
-						imgNew.Save(ms, ImageFormat.Png);
+						if((img.Width == 16) && (img.Height == 16))
+							img.Save(ms, ImageFormat.Png);
+						else
+						{
+							// Image imgNew = new Bitmap(img, new Size(16, 16));
+							Bitmap imgSc = UIUtil.CreateScaledImage(img, 16, 16);
+							imgSc.Save(ms, ImageFormat.Png);
+							imgSc.Dispose();
+						}
+						img.Dispose();
 
 						PwCustomIcon pwci = new PwCustomIcon(new PwUuid(true),
 							ms.ToArray());
@@ -338,19 +361,6 @@ namespace KeePass.Forms
 			this.DialogResult = DialogResult.OK;
 		}
 
-		private void OnFormClosing(object sender, FormClosingEventArgs e)
-		{
-			// if(m_bBlockCancel && (e.CloseReason == CloseReason.UserClosing) &&
-			//	(this.DialogResult != DialogResult.OK))
-			//	e.Cancel = true;
-
-			if(!SaveChosenIcon())
-			{
-				e.Cancel = true;
-				MessageService.ShowWarning(KPRes.PickIcon);
-			}
-		}
-
 		private void OnBtnCustomSave(object sender, EventArgs e)
 		{
 			ListView.SelectedListViewItemCollection lvsic = m_lvCustomIcons.SelectedItems;
@@ -363,8 +373,9 @@ namespace KeePass.Forms
 				// AddFileType(sbFilter, "*.ico", "Windows Icon (*.ico)");
 				sbFilter.Append(@"|" + KPRes.AllFiles + @" (*.*)|*.*");
 
-				SaveFileDialog sfd = UIUtil.CreateSaveFileDialog(KPRes.ExportFileTitle,
-					KPRes.Export + ".png", sbFilter.ToString(), 1, null, true);
+				SaveFileDialogEx sfd = UIUtil.CreateSaveFileDialog(KPRes.ExportFileTitle,
+					KPRes.Export + ".png", sbFilter.ToString(), 1, null,
+					AppDefs.FileDialogContext.Export);
 				if(sfd.ShowDialog() == DialogResult.OK)
 					SaveImageFile(lvsic[0], sfd.FileName);
 			}

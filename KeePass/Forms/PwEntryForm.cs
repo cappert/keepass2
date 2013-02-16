@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -850,6 +850,12 @@ namespace KeePass.Forms
 			m_icgPassword.Release();
 			m_cgExpiry.Release();
 
+			// Detach event handlers
+			m_lvStrings.SmallImageList = null;
+			m_lvBinaries.SmallImageList = null;
+			m_lvAutoType.SmallImageList = null;
+			m_lvHistory.SmallImageList = null;
+
 			m_btnGenPw.Image = null;
 			m_imgPwGen.Dispose();
 			m_imgPwGen = null;
@@ -943,8 +949,9 @@ namespace KeePass.Forms
 
 			if(nSelCount == 1)
 			{
-				SaveFileDialog sfd = UIUtil.CreateSaveFileDialog(KPRes.AttachmentSave,
-					lvsc[0].Text, UIUtil.CreateFileTypeFilter(null, null, true), 1, null, false);
+				SaveFileDialogEx sfd = UIUtil.CreateSaveFileDialog(KPRes.AttachmentSave,
+					lvsc[0].Text, UIUtil.CreateFileTypeFilter(null, null, true), 1, null,
+					AppDefs.FileDialogContext.Attachments);
 
 				if(sfd.ShowDialog() == DialogResult.OK)
 					SaveAttachmentTo(lvsc[0], sfd.FileName, false);
@@ -1195,21 +1202,24 @@ namespace KeePass.Forms
 			IconPickerForm ipf = new IconPickerForm();
 			ipf.InitEx(m_ilIcons, (uint)PwIcon.Count, m_pwDatabase,
 				(uint)m_pwEntryIcon, m_pwCustomIconID);
-			ipf.ShowDialog();
 
-			if(ipf.ChosenCustomIconUuid != PwUuid.Zero) // Custom icon
+			if(ipf.ShowDialog() == DialogResult.OK)
 			{
-				m_pwCustomIconID = ipf.ChosenCustomIconUuid;
-				UIUtil.SetButtonImage(m_btnIcon, m_pwDatabase.GetCustomIcon(
-					m_pwCustomIconID), true);
+				if(ipf.ChosenCustomIconUuid != PwUuid.Zero) // Custom icon
+				{
+					m_pwCustomIconID = ipf.ChosenCustomIconUuid;
+					UIUtil.SetButtonImage(m_btnIcon, m_pwDatabase.GetCustomIcon(
+						m_pwCustomIconID), true);
+				}
+				else // Standard icon
+				{
+					m_pwEntryIcon = (PwIcon)ipf.ChosenIconId;
+					m_pwCustomIconID = PwUuid.Zero;
+					UIUtil.SetButtonImage(m_btnIcon, m_ilIcons.Images[
+						(int)m_pwEntryIcon], true);
+				}
 			}
-			else // Standard icon
-			{
-				m_pwEntryIcon = (PwIcon)ipf.ChosenIconId;
-				m_pwCustomIconID = PwUuid.Zero;
-				UIUtil.SetButtonImage(m_btnIcon, m_ilIcons.Images[
-					(int)m_pwEntryIcon], true);
-			}
+
 			UIUtil.DestroyForm(ipf);
 		}
 
@@ -1532,8 +1542,8 @@ namespace KeePass.Forms
 			if(strFilter != null) strFlt += strFilter;
 			strFlt += KPRes.AllFiles + @" (*.*)|*.*";
 
-			OpenFileDialog dlg = UIUtil.CreateOpenFileDialog(null, strFlt, 1, null,
-				false, false);
+			OpenFileDialogEx dlg = UIUtil.CreateOpenFileDialog(null, strFlt, 1, null,
+				false, AppDefs.FileDialogContext.Attachments);
 
 			if(dlg.ShowDialog() == DialogResult.OK)
 				m_tbUrl.Text = "cmd://\"" + dlg.FileName + "\"";
@@ -1662,70 +1672,78 @@ namespace KeePass.Forms
 		{
 			if(m_pwEditMode == PwEditMode.ViewReadOnlyEntry) return;
 
-			OpenFileDialog ofd = UIUtil.CreateOpenFileDialog(KPRes.AttachFiles,
-				UIUtil.CreateFileTypeFilter(null, null, true), 1, null, true, true);
+			OpenFileDialogEx ofd = UIUtil.CreateOpenFileDialog(KPRes.AttachFiles,
+				UIUtil.CreateFileTypeFilter(null, null, true), 1, null, true,
+				AppDefs.FileDialogContext.Attachments);
 
 			if(ofd.ShowDialog() == DialogResult.OK)
+				BinImportFiles(ofd.FileNames);
+		}
+
+		private void BinImportFiles(string[] vPaths)
+		{
+			if(vPaths == null) { Debug.Assert(false); return; }
+
+			UpdateEntryBinaries(true, false);
+
+			foreach(string strFile in vPaths)
 			{
-				UpdateEntryBinaries(true, false);
+				if(string.IsNullOrEmpty(strFile)) { Debug.Assert(false); continue; }
 
-				foreach(string strFile in ofd.FileNames)
+				byte[] vBytes = null;
+				string strMsg, strItem = UrlUtil.GetFileName(strFile);
+
+				if(m_vBinaries.Get(strItem) != null)
 				{
-					byte[] vBytes = null;
-					string strMsg, strItem = UrlUtil.GetFileName(strFile);
+					strMsg = KPRes.AttachedExistsAlready + MessageService.NewLine +
+						strItem + MessageService.NewParagraph + KPRes.AttachNewRename +
+						MessageService.NewParagraph + KPRes.AttachNewRenameRemarks0 +
+						MessageService.NewLine + KPRes.AttachNewRenameRemarks1 +
+						MessageService.NewLine + KPRes.AttachNewRenameRemarks2;
 
-					if(m_vBinaries.Get(strItem) != null)
+					DialogResult dr = MessageService.Ask(strMsg, null,
+						MessageBoxButtons.YesNoCancel);
+
+					if(dr == DialogResult.Cancel) continue;
+					else if(dr == DialogResult.Yes)
 					{
-						strMsg = KPRes.AttachedExistsAlready + MessageService.NewLine +
-							strItem + MessageService.NewParagraph + KPRes.AttachNewRename +
-							MessageService.NewParagraph + KPRes.AttachNewRenameRemarks0 +
-							MessageService.NewLine + KPRes.AttachNewRenameRemarks1 +
-							MessageService.NewLine + KPRes.AttachNewRenameRemarks2;
+						string strFileName = UrlUtil.StripExtension(strItem);
+						string strExtension = "." + UrlUtil.GetExtension(strItem);
 
-						DialogResult dr = MessageService.Ask(strMsg, null,
-							MessageBoxButtons.YesNoCancel);
-
-						if(dr == DialogResult.Cancel) continue;
-						else if(dr == DialogResult.Yes)
+						int nTry = 0;
+						while(true)
 						{
-							string strFileName = UrlUtil.StripExtension(strItem);
-							string strExtension = "." + UrlUtil.GetExtension(strItem);
-
-							int nTry = 0;
-							while(true)
+							string strNewName = strFileName + nTry.ToString() + strExtension;
+							if(m_vBinaries.Get(strNewName) == null)
 							{
-								string strNewName = strFileName + nTry.ToString() + strExtension;
-								if(m_vBinaries.Get(strNewName) == null)
-								{
-									strItem = strNewName;
-									break;
-								}
-
-								++nTry;
+								strItem = strNewName;
+								break;
 							}
-						}
-					}
 
-					try
-					{
-						vBytes = File.ReadAllBytes(strFile);
-						vBytes = DataEditorForm.ConvertAttachment(strItem, vBytes);
-
-						if(vBytes != null)
-						{
-							ProtectedBinary pb = new ProtectedBinary(false, vBytes);
-							m_vBinaries.Set(strItem, pb);
+							++nTry;
 						}
-					}
-					catch(Exception exAttach)
-					{
-						MessageService.ShowWarning(KPRes.AttachFailed, strFile, exAttach);
 					}
 				}
 
-				UpdateEntryBinaries(false, true);
-				ResizeColumnHeaders();
+				try
+				{
+					vBytes = File.ReadAllBytes(strFile);
+					vBytes = DataEditorForm.ConvertAttachment(strItem, vBytes);
+
+					if(vBytes != null)
+					{
+						ProtectedBinary pb = new ProtectedBinary(false, vBytes);
+						m_vBinaries.Set(strItem, pb);
+					}
+				}
+				catch(Exception exAttach)
+				{
+					MessageService.ShowWarning(KPRes.AttachFailed, strFile, exAttach);
+				}
 			}
+
+			UpdateEntryBinaries(false, true);
+			ResizeColumnHeaders();
 		}
 
 		private void OnCtxBinNew(object sender, EventArgs e)
@@ -1778,6 +1796,35 @@ namespace KeePass.Forms
 			m_vBinaries.Set(strNew, pb);
 
 			UpdateEntryBinaries(false, true, strNew);
+		}
+
+		private void BinDragAccept(DragEventArgs e)
+		{
+			if(e == null) { Debug.Assert(false); return; }
+
+			IDataObject ido = e.Data;
+			if((ido == null) || !ido.GetDataPresent(DataFormats.FileDrop))
+				e.Effect = DragDropEffects.None;
+			else e.Effect = DragDropEffects.Copy;
+		}
+
+		private void OnBinDragEnter(object sender, DragEventArgs e)
+		{
+			BinDragAccept(e);
+		}
+
+		private void OnBinDragOver(object sender, DragEventArgs e)
+		{
+			BinDragAccept(e);
+		}
+
+		private void OnBinDragDrop(object sender, DragEventArgs e)
+		{
+			try
+			{
+				BinImportFiles(e.Data.GetData(DataFormats.FileDrop) as string[]);
+			}
+			catch(Exception) { Debug.Assert(false); }
 		}
 	}
 }

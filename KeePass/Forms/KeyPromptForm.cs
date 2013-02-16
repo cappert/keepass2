@@ -1,6 +1,6 @@
 /*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -117,6 +117,7 @@ namespace KeePass.Forms
 				Properties.Resources.B48x48_KGPG_Key2, strBannerTitle, strBannerDesc);
 			this.Icon = Properties.Resources.KeePass;
 
+			FontUtil.SetDefaultFont(m_cbPassword);
 			FontUtil.AssignDefaultBold(m_cbPassword);
 			FontUtil.AssignDefaultBold(m_cbKeyFile);
 			FontUtil.AssignDefaultBold(m_cbUserAccount);
@@ -155,6 +156,17 @@ namespace KeePass.Forms
 				{
 					m_cbPassword.Checked = true;
 					m_tbPassword.Text = StrUtil.DecryptString(str);
+				}
+
+				str = Program.CommandLineArgs[AppDefs.CommandLineOptions.PasswordStdIn];
+				if(str != null)
+				{
+					KcpPassword kcpPw = KeyUtil.ReadPasswordStdIn(true);
+					if(kcpPw != null)
+					{
+						m_cbPassword.Checked = true;
+						m_tbPassword.Text = kcpPw.Password.ReadString();
+					}
 				}
 
 				str = Program.CommandLineArgs[AppDefs.CommandLineOptions.KeyFile];
@@ -374,7 +386,7 @@ namespace KeePass.Forms
 		{
 			if(((Program.Config.UI.KeyPromptFlags & (ulong)AceKeyUIFlags.CheckPassword) == 0) &&
 				((Program.Config.UI.KeyPromptFlags & (ulong)AceKeyUIFlags.UncheckPassword) == 0))
-				UIUtil.SetChecked(m_cbPassword, m_tbPassword.Text.Length > 0);
+				UIUtil.SetChecked(m_cbPassword, m_tbPassword.TextLength > 0);
 		}
 
 		private void OnCheckedHidePassword(object sender, EventArgs e)
@@ -417,7 +429,8 @@ namespace KeePass.Forms
 			if(m_bSecureDesktop)
 			{
 				FileBrowserForm dlg = new FileBrowserForm();
-				dlg.InitEx(false, KPRes.KeyFileSelect, KPRes.SecDeskFileDialogHint);
+				dlg.InitEx(false, KPRes.KeyFileSelect, KPRes.SecDeskFileDialogHint,
+					AppDefs.FileDialogContext.KeyFile);
 				if(dlg.ShowDialog() == DialogResult.OK)
 					strFile = dlg.SelectedFile;
 				UIUtil.DestroyForm(dlg);
@@ -425,8 +438,8 @@ namespace KeePass.Forms
 			else
 			{
 				string strFilter = UIUtil.CreateFileTypeFilter("key", KPRes.KeyFiles, true);
-				OpenFileDialog ofd = UIUtil.CreateOpenFileDialog(KPRes.KeyFileSelect,
-					strFilter, 2, null, false, true);
+				OpenFileDialogEx ofd = UIUtil.CreateOpenFileDialog(KPRes.KeyFileSelect,
+					strFilter, 2, null, false, AppDefs.FileDialogContext.KeyFile);
 
 				if(ofd.ShowDialog() == DialogResult.OK)
 					strFile = ofd.FileName;

@@ -1,6 +1,6 @@
 ﻿/*
   KeePass Password Safe - The Open-Source Password Manager
-  Copyright (C) 2003-2012 Dominik Reichl <dominik.reichl@t-online.de>
+  Copyright (C) 2003-2013 Dominik Reichl <dominik.reichl@t-online.de>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -55,12 +55,12 @@ namespace KeePass.DataExchange.Formats
 		public override void Import(PwDatabase pwStorage, Stream sInput,
 			IStatusLogger slLogger)
 		{
-			Kdb4File kdb4 = new Kdb4File(pwStorage);
+			KdbxFile kdbx = new KdbxFile(pwStorage);
 			// CappedByteStream s = new CappedByteStream(sInput, 64);
 
-			kdb4.RepairMode = true;
+			kdbx.RepairMode = true;
 
-			try { kdb4.Load(sInput, Kdb4Format.Default, slLogger); }
+			try { kdbx.Load(sInput, KdbxFormat.Default, slLogger); }
 			catch(Exception) { }
 		}
 
